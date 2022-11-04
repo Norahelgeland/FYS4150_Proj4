@@ -18,8 +18,12 @@ class ising_model{
 
     double tot_energy();
 
+    double tot_magnetization();
 
+    double energy_spin();
 
     double magnetization_spin();
+
+    double boltzmann_dist();
 
 }
