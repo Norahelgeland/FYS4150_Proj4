@@ -1,29 +1,35 @@
+#ifndef __filename_hpp__
+#define __filename_hpp__
+#include <armadillo>
 
-
-
-class ising_model{
+class Ising_model{
 
     private:
 
     public:
+        double T;
+        int L;
+        int N;
+        arma::mat S;
+        int Z;
 
-    double T;
-    int L;
-    int N;
-
-    Ising_model(){};
+        Ising_model(){};
         // Constructor
-    PenningTrap(double T, int L);
+        Ising_model(double T, int L);
 
 
-    double tot_energy();
+        double tot_energy(arma::mat S);
+        
+        arma::vec possible_E();
 
-    double tot_magnetization();
+        double Z_fun();
 
-    double energy_spin();
+        double tot_magnetization();
 
-    double magnetization_spin();
+        double boltzmann_dist(arma::mat S);
 
-    double boltzmann_dist();
+        arma::vec Possible_p();
 
-}
+};
+
+#endif
