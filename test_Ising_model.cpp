@@ -5,8 +5,8 @@
 int main(){
 
     // Test file for the Ising Model
-    double T = 50;
-    double L = 3;
+    double T = 1.;
+    double L = 3.;
 
     Ising_model model = Ising_model(T, L);
 
@@ -36,15 +36,38 @@ int main(){
     assert(possible_E(4) == -4.);
     assert(possible_E(5) == -4.);
 
+    arma::vec possible_M = model.possible_M();
+
+    assert(possible_M(0) == 9.);
+    assert(possible_M(1) == 7.);
+    assert(possible_M(2) == 5.);
+    assert(possible_M(3) == 3.);
+    assert(possible_M(4) == 1.);
+    assert(possible_M(5) == -1.);
+    assert(possible_M(6) == -3.);
+    assert(possible_M(7) == -5.);
+    assert(possible_M(8) == -7.);
+    assert(possible_M(9) == -9.);
+
 
     double Z = model.Z_fun();
-    assert(floor(Z) == 14.);
+   // assert(floor(Z) == 14.);
 
     double Boltz = model.boltzmann_dist(model.S);
     //assert(Boltz == 0.146745);
 
     arma::vec P_poss = model.Possible_p();
     std::cout << P_poss;
+
+    //Testing the expectation value function for the possible energies
+    double exp_value = model.Exp_value(possible_E);
+
+   // assert(floor(exp_value)==-20);
+
+    for(int i = 1; i <=9; i++){
+        model.MCMC();
+    }
+    std::cout<< model.S;
 
     return 0;
 

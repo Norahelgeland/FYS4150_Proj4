@@ -12,6 +12,10 @@ Ising_model::Ising_model(double T_in, int L_in){
     N = L*L;
     S = arma::mat(L+2, L+2).fill(1);
     Z = Z_fun();
+    
+    //exp_val_e = exp_val_E();
+    //exp_val_m
+    //exp_val_m2
 
 }
 
@@ -48,7 +52,7 @@ Ising_model::Ising_model(double T_in, int L_in){
         return E_poss;
     }
 
-    double Ising_model::tot_magnetization(){
+    double Ising_model::tot_magnetization(arma::mat S){
         int Msum = 0;
         for(int i = 1; i <= L; i++){
             for(int j = 1; j <= L; j++){
@@ -57,6 +61,31 @@ Ising_model::Ising_model(double T_in, int L_in){
         } 
     return Msum;
     }
+
+
+    arma::vec Ising_model::possible_M(){
+        arma::mat A = arma::mat(L+2, L+2).fill(1);
+
+        arma::vec M_poss = arma::vec(N+1).fill(0);
+
+        M_poss(0) = tot_magnetization(A);
+        
+        int counter = 1;
+        for(int i = 1; i <= L; i++){
+            for(int j = 1; j <= L; j++){
+                A(i,j) = -1;
+                A.col(0) = A.col(L);
+                A.col(L+1) = A.col(1);
+                A.row(0) = A.row(L);
+                A.row(L+1) = A.row(1);
+                M_poss(counter) = tot_magnetization(A);
+                counter += 1;
+            }
+        } 
+
+        return M_poss;
+    }
+
 
     double Ising_model::Z_fun(){
 
@@ -96,6 +125,48 @@ Ising_model::Ising_model(double T_in, int L_in){
 
         return P_poss;
     }
+    double Ising_model::Exp_value(arma::vec input){
+        arma::vec pdf = Possible_p();
+        double exp_val = 0;
+
+        for(int s = 0; s < N+1; s++){
+            exp_val += input(s)*pdf(s);
+        }
+
+        return exp_val;
+    }
+
+    void Ising_model::MCMC(){
+
+        arma::mat S_i = S;
+        int range = L - 1 + 1;
+        int num_i = rand() % range + 1; 
+
+        int num_j = rand() % range + 1; 
+
+        S(num_i, num_j) = S(num_i, num_j)*(-1);
+        S.col(0) = S.col(L);
+        S.col(L+1) = S.col(1);
+        S.row(0) = S.row(L);
+        S.row(L+1) = S.row(1);
+        double r = (rand() % 10)/10.;
+        std::cout << r;
+        double p = boltzmann_dist(S)/boltzmann_dist(S_i);
+        
+
+        if(p>1){
+
+            p = 1;
+        }
+        std::cout << p;
+
+        if(r > p){
+            S = S_i;
+        }
+
+
+    }
+
 
 
 

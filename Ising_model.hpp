@@ -24,11 +24,17 @@ class Ising_model{
 
         double Z_fun();
 
-        double tot_magnetization();
+        double tot_magnetization(arma::mat S);
+
+        arma::vec possible_M();
 
         double boltzmann_dist(arma::mat S);
 
         arma::vec Possible_p();
+        
+        double Exp_value(arma::vec input);
+
+        void MCMC();
 
 };
 
