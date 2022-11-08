@@ -8,10 +8,15 @@ class Ising_model{
 
     public:
         double T;
-        int L;
-        int N;
+        double L;
+        double N;
         arma::mat S;
-        int Z;
+        double Z;
+        double exp_val_E;
+        double exp_val_e;
+        double exp_val_m;
+        double spes_heat;
+        double suscept;
 
         Ising_model(){};
         // Constructor

@@ -51,7 +51,7 @@ int main(){
 
 
     double Z = model.Z_fun();
-   // assert(floor(Z) == 14.);
+   //assert(floor(Z) == 14.);
 
     double Boltz = model.boltzmann_dist(model.S);
     //assert(Boltz == 0.146745);
@@ -64,10 +64,25 @@ int main(){
 
    // assert(floor(exp_value)==-20);
 
-    for(int i = 1; i <=9; i++){
+    for(int i = 1; i <=100; i++){
         model.MCMC();
     }
-    std::cout<< model.S;
+    std::cout << model.S;
+    std::cout << "###########################";
+    std::cout << model.exp_val_E;
+    std::cout << "###########################";
+    std::cout << model.exp_val_e;
+    std::cout << "###########################";
+    std::cout << model.exp_val_m;
+    std::cout << "###########################";
+    std::cout << model.tot_energy(model.S)/model.N;
+    std::cout << "###########################";
+    std::cout << model.tot_magnetization(model.S)/model.N;
+    std::cout << "###########################";
+    std::cout << model.spes_heat;
+    std::cout << "###########################";
+    std::cout << model.suscept;
+    std::cout << "###########################";
 
     return 0;
 

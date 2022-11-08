@@ -3,6 +3,7 @@
 #include "Ising_model.hpp"
 #include <armadillo>
 #include <iostream>
+#include <math.h>
 
 Ising_model::Ising_model(double T_in, int L_in){
 
@@ -13,9 +14,11 @@ Ising_model::Ising_model(double T_in, int L_in){
     S = arma::mat(L+2, L+2).fill(1);
     Z = Z_fun();
     
-    //exp_val_e = exp_val_E();
-    //exp_val_m
-    //exp_val_m2
+    exp_val_E = Exp_value(possible_E());
+    exp_val_e = Exp_value(possible_E()/N);
+    exp_val_m = Exp_value(abs(possible_M()/N));
+    spes_heat = 1./N*1./pow(T,2)*(Exp_value(pow(possible_E(),2))-pow(Exp_value(possible_E()),2));
+    suscept = 1./N*1./T*(Exp_value(pow(possible_M(),2))-pow(Exp_value(abs(possible_M())),2));
 
 }
 
@@ -91,7 +94,7 @@ Ising_model::Ising_model(double T_in, int L_in){
 
         arma::vec Epos = possible_E();
         
-         double Z = 0;
+        double Z = 0;
         for(int i = 0; i <= N; i++){
             Z += exp(-(1/T)*Epos(i));
         }
@@ -150,7 +153,6 @@ Ising_model::Ising_model(double T_in, int L_in){
         S.row(0) = S.row(L);
         S.row(L+1) = S.row(1);
         double r = (rand() % 10)/10.;
-        std::cout << r;
         double p = boltzmann_dist(S)/boltzmann_dist(S_i);
         
 
@@ -158,7 +160,6 @@ Ising_model::Ising_model(double T_in, int L_in){
 
             p = 1;
         }
-        std::cout << p;
 
         if(r > p){
             S = S_i;
