@@ -37,9 +37,11 @@ class Ising_model{
 
         arma::vec Possible_p();
         
-        double Exp_value(arma::vec input);
+        double Exp_value(arma::vec input);    
 
         void MCMC();
+
+        void update();
 
 };
 

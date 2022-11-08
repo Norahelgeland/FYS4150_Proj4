@@ -20,8 +20,8 @@ int main(){
 
     //std::cout << "###########################";
 
-    double E_tot = model.tot_energy(model.S);
-    //std::cout << E_tot;
+    double E_tot = model.tot_energy(S_new);
+
 
     arma::vec possible_E = model.possible_E();
 

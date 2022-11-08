@@ -14,23 +14,34 @@ Ising_model::Ising_model(double T_in, int L_in){
     S = arma::mat(L+2, L+2).fill(1);
     Z = Z_fun();
     
-    exp_val_E = Exp_value(possible_E());
+  /*   exp_val_E = Exp_value(possible_E());
     exp_val_e = Exp_value(possible_E()/N);
     exp_val_m = Exp_value(abs(possible_M()/N));
     spes_heat = 1./N*1./pow(T,2)*(Exp_value(pow(possible_E(),2))-pow(Exp_value(possible_E()),2));
-    suscept = 1./N*1./T*(Exp_value(pow(possible_M(),2))-pow(Exp_value(abs(possible_M())),2));
+    suscept = 1./N*1./T*(Exp_value(pow(possible_M(),2))-pow(Exp_value(abs(possible_M())),2)); */
 
 }
 
     double Ising_model::tot_energy(arma::mat S){
         double E_tot = 0;
-        for(int i = 1; i <= L; i++){
+
+         for(int i = 0; i <= L; i++){
+            for(int entry = 1; entry <= L; entry++){
+            E_tot += S.row(i)(entry) * S.row(i+1)(entry);
+            E_tot += S.col(i)(entry) * S.col(i+1)(entry);
+            } 
+         }
+        
+
+/*          for(int i = 1; i <= L; i++){
             for(int j = 1; j <= L; j++){
                 E_tot += S(i,j)*(S(i-1,j)+S(i,j-1)+S(i+1,j)+S(i,j+1));
             }
-        } 
+        }  */ 
         return -E_tot;
     }
+
+
 
     arma::vec Ising_model::possible_E(){
         arma::mat A = arma::mat(L+2, L+2).fill(1);
@@ -154,6 +165,8 @@ Ising_model::Ising_model(double T_in, int L_in){
         S.row(L+1) = S.row(1);
         double r = (rand() % 10)/10.;
         double p = boltzmann_dist(S)/boltzmann_dist(S_i);
+
+        arma::vec E_col = arma::vec(N+1).fill(0);
         
 
         if(p>1){
@@ -165,8 +178,32 @@ Ising_model::Ising_model(double T_in, int L_in){
             S = S_i;
         }
 
-
     }
+
+    void Ising_model::update(){
+
+            arma::vec E_col = arma::vec(N+1).fill(0);
+            arma::vec B_col = arma::vec(N+1).fill(0);
+            for(int j = 0; j < N; j++){
+                MCMC();
+                E_col(j) = tot_energy(S);
+                B_col(j) = tot_magnetization(S);
+                }   
+         // Update expectation values
+
+            exp_val_E = accu(E_col)/N;
+            exp_val_e = accu(E_col/(N))/(N);
+            exp_val_m = accu(abs(abs(B_col)/(N))/(N));
+            //spes_heat
+            //suscept
+
+            /* exp_val_E = Exp_value(E_col);
+            exp_val_e = Exp_value(E_col/N);
+            exp_val_m = Exp_value(abs(B_col/N));
+            spes_heat = 1./N*1./pow(T,2)*(Exp_value(pow(E_col,2))-pow(Exp_value(E_col),2));
+            suscept = 1./N*1./T*(Exp_value(pow(B_col,2))-pow(Exp_value(abs(B_col)),2)); */
+    }
+    
 
 
 
