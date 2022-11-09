@@ -1,25 +1,31 @@
 #include "Ising_model.cpp"
 #include <iostream>
 #include <armadillo>
+#include "random_model.hpp"
 
 int main(){
 
-    double T = 1.;
+    double T = 1;
+    // Burde ikke dette være større siden det er et latice og ikke input?
     double L = 20.;
 
     Ising_model model = Ising_model(T, L);
+    //std::cout << model.possible_E(); 
 
-/*      arma::mat S_new = model.S;
-    S_new(1,1) = -1;
+    model.S = random_model(model.S, L);
+    
+
+    arma::mat S_new = model.S;
+    //S_new(1,1) = -1;
     S_new.col(0) = S_new.col(L);
     S_new.col(L+1) = S_new.col(1);
     S_new.row(0) = S_new.row(L);
     S_new.row(L+1) = S_new.row(1);
 
-    std::cout << S_new;
+    //std::cout << S_new;
 
-    std::cout << model.tot_energy(S_new); 
- */
+    //std::cout << model.tot_energy(S_new); 
+ 
 
     //arma::vec p = model.Possible_p();
     double cycles = 100.;
@@ -33,7 +39,7 @@ int main(){
     }
 
     // Write the vectors to files
-    std::string filename = "Exp_e_m_1.txt";
+    std::string filename = "Exp_e_m_random_1.txt";
     std::ofstream ofile;
     ofile.open(filename);
     int width = 12;
@@ -45,7 +51,7 @@ int main(){
             << std::setw(width) << std::setprecision(prec) << std::scientific << exp_val_m[i]
             << std::endl; 
     }  
-    ofile.close(); 
+    ofile.close();  
     
     /*
     std::cout << model.S;
@@ -66,4 +72,6 @@ int main(){
     std::cout << "\n\n suscept:";
     std::cout << model.suscept;
     std::cout << "####";   */
+
+
 }
