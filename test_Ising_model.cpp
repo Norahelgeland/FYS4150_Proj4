@@ -6,7 +6,7 @@ int main(){
 
     // Test file for the Ising Model
     double T = 1.;
-    double L = 3.;
+    double L = 2.;
 
     Ising_model model = Ising_model(T, L);
 
@@ -20,38 +20,34 @@ int main(){
 
     //std::cout << "###########################";
 
-    double E_tot = model.tot_energy(S_new);
+    //double E_tot = model.tot_energy(S_new);
+    //double E_tot = model.tot_energy(model.S);
+    //std::cout << E_tot;
 
 
     arma::vec possible_E = model.possible_E();
 
-    assert(possible_E(0) == -36.);
-    assert(possible_E(9) == -36.);
-    assert(possible_E(1) == -20.);
-    assert(possible_E(8) == -20.);
-    assert(possible_E(2) == -12.);
-    assert(possible_E(3) == -12.);
-    assert(possible_E(7) == -12.);
-    assert(possible_E(6) == -12.);
-    assert(possible_E(4) == -4.);
-    assert(possible_E(5) == -4.);
+    assert(possible_E(0) == -8.);
+    assert(possible_E(1) == 0.);
+    assert(possible_E(2) == 0.);
+    assert(possible_E(3) == 0.);
+    assert(possible_E(4) == -8.);
+
+    
 
     arma::vec possible_M = model.possible_M();
 
-    assert(possible_M(0) == 9.);
-    assert(possible_M(1) == 7.);
-    assert(possible_M(2) == 5.);
-    assert(possible_M(3) == 3.);
-    assert(possible_M(4) == 1.);
-    assert(possible_M(5) == -1.);
-    assert(possible_M(6) == -3.);
-    assert(possible_M(7) == -5.);
-    assert(possible_M(8) == -7.);
-    assert(possible_M(9) == -9.);
+    assert(possible_M(0) == 4.);
+    assert(possible_M(1) == 2.);
+    assert(possible_M(2) == 0.);
+    assert(possible_M(3) == -2.);
+    assert(possible_M(4) == -4.); 
+
 
 
     double Z = model.Z_fun();
-   //assert(floor(Z) == 14.);
+    assert(floor(Z) == 5964.);
+   /*
 
     double Boltz = model.boltzmann_dist(model.S);
     //assert(Boltz == 0.146745);
@@ -63,26 +59,29 @@ int main(){
     double exp_value = model.Exp_value(possible_E);
 
    // assert(floor(exp_value)==-20);
-
-    for(int i = 1; i <=100; i++){
-        model.MCMC();
+   */
+ 
+    for(int i = 1; i <=1; i++){
+        model.update();
     }
     std::cout << model.S;
-    std::cout << "###########################";
+    std::cout << "\n\n tot_energy:";
+    std::cout << model.possible_E();
+    std::cout << "\n\n exp_val_E:";
     std::cout << model.exp_val_E;
-    std::cout << "###########################";
+    std::cout << "\n\n exp_val_e:";
     std::cout << model.exp_val_e;
-    std::cout << "###########################";
+    std::cout << "\n\n exp_val_m:";
     std::cout << model.exp_val_m;
-    std::cout << "###########################";
+    std::cout << "\n\n tot_energy:";
     std::cout << model.tot_energy(model.S)/model.N;
-    std::cout << "###########################";
+    std::cout << "\n\n tot_magnetization:";
     std::cout << model.tot_magnetization(model.S)/model.N;
-    std::cout << "###########################";
+    std::cout << "\n\n spes_heat:";
     std::cout << model.spes_heat;
-    std::cout << "###########################";
+    std::cout << "\n\n suscept:";
     std::cout << model.suscept;
-    std::cout << "###########################";
+    std::cout << "####";    
 
     return 0;
 
