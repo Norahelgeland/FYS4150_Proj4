@@ -12,19 +12,14 @@ std::uniform_real_distribution<double> disDOUBLE(0.0, 1.0);
 
 Ising_model::Ising_model(double T_in, int L_in){
     
-
-    //double random = dis(generator);
-
     // Setting values
     T = T_in;
     L = L_in;
     N = L*L;
-    //S = arma::mat(L+2, L+2).fill(1);
     S = arma::mat(L, L).fill(1);
-    Z = Z_fun();
+    boltzmann_factor = make_boltzmann_factors();
     
 }
-    // HOW (???)
     double Ising_model::tot_energy(arma::mat S){
         double E_tot = 0;
 
@@ -34,46 +29,21 @@ Ising_model::Ising_model(double T_in, int L_in){
                 E_tot += S(i,j)*(S(i,(j+1)%L));
 
             }
-
-         /* for(int i = 0; i < L-1; i++){
-            for(int entry = -1; entry <= L; entry++){
-                //E_tot += S.row(i)(entry) * S.row(i+1)(entry);
-                //E_tot += S.col(i)(entry) * S.col(i+1)(entry);
-
-                E_tot += S.row(i)(entry%L) * S.row(i+1)(entry%L);
-                E_tot += S.col(i)(entry%L) * S.col(i+1)(entry%L);
-            }  */
          }
         
-
-/*          for(int i = 1; i <= L; i++){
-            for(int j = 1; j <= L; j++){
-                E_tot += S(i,j)*(S(i-1,j)+S(i,j-1)+S(i+1,j)+S(i,j+1));
-            }
-        }  */ 
         return -E_tot;
     }
 
-
-
-    arma::vec Ising_model::possible_E(){
-        arma::mat A = arma::mat(L, L).fill(1);
-
-        arma::vec E_poss = arma::vec(N+1).fill(0);
-
-        E_poss(0) = tot_energy(A);
-        
-        int counter = 1;
-        for(int i = 0; i < L; i++){
-            for(int j = 0; j < L; j++){
-                A(i,j) = -1;
-                E_poss(counter) = tot_energy(A);
-                counter += 1;
-            }
-        } 
-
-        return E_poss;
+    std::map <double, double> Ising_model::make_boltzmann_factors(){
+        std::map <double, double> boltzmann_factor;
+        boltzmann_factor[-8.] = exp(-(1/T)*-8.);
+        boltzmann_factor[-4.] = exp(-(1/T)*-4.);
+        boltzmann_factor[0.] = exp(-(1/T)*0.);
+        boltzmann_factor[4.] = exp(-(1/T)*4.);
+        boltzmann_factor[8.] = exp(-(1/T)*8.);
+        return boltzmann_factor;
     }
+
 
     double Ising_model::tot_magnetization(arma::mat S){
         int Msum = 0;
@@ -86,7 +56,7 @@ Ising_model::Ising_model(double T_in, int L_in){
     }
 
 
-    arma::vec Ising_model::possible_M(){
+/*     arma::vec Ising_model::possible_M(){
 
         arma::mat A = arma::mat(L, L).fill(1);
 
@@ -104,84 +74,44 @@ Ising_model::Ising_model(double T_in, int L_in){
         } 
 
         return M_poss;
-    }
+    } */
 
-
-    double Ising_model::Z_fun(){
-
-        arma::vec Epos = possible_E();
-        
-        double Z = 0;
-        for(int i = 0; i <= N; i++){
-            Z += exp(-(1/T)*Epos(i));
-        }
-        return Z; 
-    }
-
+/* 
     double Ising_model::boltzmann_dist(arma::mat S){
         double distr = (1./Z)*exp(-(1/T)*tot_energy(S)); 
         return distr;
-    }
-
-/*     arma::vec Ising_model::Possible_p(){
-        
-        arma::mat A = arma::mat(L+2, L+2).fill(1);
-        arma::vec P_poss = arma::vec(N+1).fill(0);
-
-        P_poss(0) = boltzmann_dist(A);
-        
-        int counter = 1;
-        for(int i = 1; i <= L; i++){
-            for(int j = 1; j <= L; j++){
-                A(i,j) = -1;
-                A.col(0) = A.col(L);
-                A.col(L+1) = A.col(1);
-                A.row(0) = A.row(L);
-                A.row(L+1) = A.row(1);
-                P_poss(counter) = boltzmann_dist(A);
-                counter += 1;
-            }
-        } 
-
-        return P_poss;
-    } */
-
-/*     // Correct with times pdf or mean (???)
-    double Ising_model::Exp_value(arma::vec input){
-        arma::vec pdf = Possible_p();
-        double exp_val = 0;
-
-        for(int s = 0; s < N+1; s++){
-            exp_val += input(s)*pdf(s);
-        }
-
-        return exp_val;
     } */
 
     void Ising_model::MCMC(){
 
-        arma::mat S_i = S;
         int num_i = disINT(generator);
         int num_j = disINT(generator);
-         
+/*         std::cout << "\n\n i:";
+        std::cout << num_i;
+        std::cout << "\n\n j:";
+        std::cout << num_j; */
         // Pick random spinn position and turn the spinn
-        int old_sum = (S((num_i-1)%L, num_j) + S(num_i, (num_j-1)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
-        S(num_i, num_j) = S(num_i, num_j)*(-1);
-        int sum_neighbours = (S((num_i-1)%L, num_j) + S(num_i, (num_j-1)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
+        int old_sum =  S(num_i, num_j)*(S((num_i-1+L)%L, num_j) + S(num_i, (num_j-1+L)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
+        //std::cout << "\n\n old_sum:";
+        //std::cout << old_sum;
         
-        double delta_E = sum_neighbours - old_sum;
+        S(num_i, num_j) = S(num_i, num_j)*(-1);
+        int new_sum =  S(num_i, num_j)*(S((num_i-1+L)%L, num_j) + S(num_i, (num_j-1+L)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
+        // std::cout << "\n\n sum_neighbours:";
+        // std::cout << new_sum;
+        
+        S(num_i, num_j) = S(num_i, num_j)*(-1);
+
+        double delta_E = new_sum - old_sum;
+       //std::cout << "\n\n delta_E:";
+        //std::cout << delta_E;
+
 
         double r = disDOUBLE(generator);
-        double p = exp(-(1/T)*delta_E);
-        //double p = boltzmann_dist(S)/boltzmann_dist(S_i);
-        //std::cout << p << " ";
 
-        if(p>1){
-            p = 1;
-        }
-
-        if(r > p){
-            S = S_i;
+        // Check if it accept the change, and flips the spinn
+        if(delta_E < 0 || r <= boltzmann_factor[delta_E]){
+            S(num_i, num_j) = S(num_i, num_j)*(-1);
         }
 
     }
@@ -196,7 +126,6 @@ Ising_model::Ising_model(double T_in, int L_in){
                 E_col += tot_energy(S);
                 B_col += tot_magnetization(S);
                 }  
-            //std::cout << std::endl;
 
             // Update expectation values
             exp_val_E = E_col/N;

@@ -2,10 +2,11 @@
 #include <iostream>
 #include <armadillo>
 #include "random_model.hpp"
+#include <math.h>
 
 int main(){
 
-    double T = 1;
+    double T = 2.4;
     // Burde ikke dette være større siden det er et latice og ikke input?
     double L = 20.; // correct (???)
 
@@ -28,7 +29,8 @@ int main(){
  
 
     //arma::vec p = model.Possible_p();
-    double cycles = 1000.;
+    //model.MCMC();
+    double cycles = 10000;
     arma::vec exp_val_e = arma::vec(cycles).fill(0);
     arma::vec exp_val_m = arma::vec(cycles).fill(0);
 
@@ -37,9 +39,9 @@ int main(){
         exp_val_e(i) = model.exp_val_e;
         exp_val_m(i) = model.exp_val_m;
     }
-
+ 
     // Write the vectors to files
-    std::string filename = "Exp_e_m_1.txt";
+    std::string filename = "Exp_e_m_2.4.txt";
     std::ofstream ofile;
     ofile.open(filename);
     int width = 12;
@@ -53,10 +55,6 @@ int main(){
     }  
     ofile.close();  
     
-    
-    std::cout << model.S;
-    std::cout << "\n\n tot_energy:";
-    std::cout << model.possible_E();
     std::cout << "\n\n exp_val_E:";
     std::cout << model.exp_val_E;
     std::cout << "\n\n exp_val_e:";
