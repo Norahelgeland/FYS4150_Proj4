@@ -30,14 +30,14 @@ int main(){
 
     //arma::vec p = model.Possible_p();
     //model.MCMC();
-    double cycles = 10000;
+    double cycles = 10000.;
     arma::vec exp_val_e = arma::vec(cycles).fill(0);
     arma::vec exp_val_m = arma::vec(cycles).fill(0);
 
     for(int i = 0; i < cycles; i++){
         model.update();
-        exp_val_e(i) = model.exp_val_e;
-        exp_val_m(i) = model.exp_val_m;
+        exp_val_e(i) = model.e;
+        exp_val_m(i) = model.m;
     }
  
     // Write the vectors to files
@@ -54,7 +54,7 @@ int main(){
             << std::endl; 
     }  
     ofile.close();  
-    
+    /* 
     std::cout << "\n\n exp_val_E:";
     std::cout << model.exp_val_E;
     std::cout << "\n\n exp_val_e:";
@@ -69,7 +69,7 @@ int main(){
     std::cout << model.spes_heat;
     std::cout << "\n\n suscept:";
     std::cout << model.suscept;
-    std::cout << "####";   
+    std::cout << "####";    */
 
 
 }

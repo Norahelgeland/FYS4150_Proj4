@@ -18,6 +18,9 @@ Ising_model::Ising_model(double T_in, int L_in){
     N = L*L;
     S = arma::mat(L, L).fill(1);
     boltzmann_factor = make_boltzmann_factors();
+    E_col = 0;
+    B_col = 0;
+    E_tot = tot_energy(S);
     
 }
     double Ising_model::tot_energy(arma::mat S){
@@ -27,7 +30,6 @@ Ising_model::Ising_model(double T_in, int L_in){
             for(int j = 0; j < L; j++){
                 E_tot += S(i,j)*(S((i+1)%L,j));
                 E_tot += S(i,j)*(S(i,(j+1)%L));
-
             }
          }
         
@@ -102,7 +104,7 @@ Ising_model::Ising_model(double T_in, int L_in){
         
         S(num_i, num_j) = S(num_i, num_j)*(-1);
 
-        double delta_E = new_sum - old_sum;
+        double delta_E = old_sum - new_sum;
        //std::cout << "\n\n delta_E:";
         //std::cout << delta_E;
 
@@ -112,27 +114,27 @@ Ising_model::Ising_model(double T_in, int L_in){
         // Check if it accept the change, and flips the spinn
         if(delta_E < 0 || r <= boltzmann_factor[delta_E]){
             S(num_i, num_j) = S(num_i, num_j)*(-1);
+            E_tot += delta_E;
         }
 
     }
 
     void Ising_model::update(){
 
-            double E_col = 0;
-            double B_col = 0;
-
             for(int j = 0; j < N; j++){
                 MCMC();
+                //E_col += E_tot;
+
                 E_col += tot_energy(S);
                 B_col += tot_magnetization(S);
                 }  
 
             // Update expectation values
-            exp_val_E = E_col/N;
-            exp_val_e = E_col/(N*N);
-            exp_val_m = abs(B_col)/(N*N);
-            spes_heat = 1./N*1./pow(T,2)*(((E_col*E_col)/N)-(exp_val_E*exp_val_E));
-            suscept = 1./N*1./T*((abs(B_col*B_col)/(N*N))-(exp_val_m*exp_val_m));
+            E = E_col/N;
+            e = E_col/(N*N);
+            m = abs(B_col)/(N);
+            //spes_heat = 1./N*1./pow(T,2)*(((E_col*E_col)/N)-(exp_val_E*exp_val_E));
+            //suscept = 1./N*1./T*((abs(B_col*B_col)/(N*N))-(exp_val_m*exp_val_m));
 
     }
     
