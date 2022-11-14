@@ -12,15 +12,18 @@ class Ising_model{
         int L;
         double N;
         arma::mat S;
-        double Z;
+        //double Z;
         double E;
-        double e;
+        double epsilon;
+        double exp_epsilon;
+        double M;
         double m;
+        double exp_m;
         double spes_heat;
         double suscept;
         std::map <double, double> boltzmann_factor;
-        double E_col;
-        double B_col;
+        //double E_col;
+        //double B_col;
         double E_tot;
 
 

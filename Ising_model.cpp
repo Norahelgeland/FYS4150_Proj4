@@ -122,30 +122,33 @@ Ising_model::Ising_model(double T_in, int L_in){
     }
 
     void Ising_model::update(){
-            E_col = 0;
-            B_col = 0;
-            //double E = 0;
+            //E = 0;
+            //exp_epsilon = 0;
+            //E = 0;
+            //M = 0;
+            E = tot_energy(S);
+            M = tot_magnetization(S);
+            //exp_m = 0;
             for(int j = 0; j < N; j++){
                 MCMC();
                 //E_col += E_tot;
 
-                E_col += tot_energy(S);
-                B_col += tot_magnetization(S);
+                E += tot_energy(S);
+                M += tot_magnetization(S);
                 }  
 
             //E = tot_energy(S);
-
+            epsilon = tot_energy(S)/N;
+            m = M/(N);
             //E = E/N;
-            E_col = E_col/N;
-            B_col = B_col/N;
+            exp_epsilon = E/(N*N);
+            exp_m = M/(N*N);
             // Update expectation values
             //E = E_col;
             //e = E_col/(N);
             //m = abs(B_col)/(N);
             //spes_heat = 1./N*1./pow(T,2)*(((E_col*E_col)/N)-(exp_val_E*exp_val_E));
             //suscept = 1./N*1./T*((abs(B_col*B_col)/(N*N))-(exp_val_m*exp_val_m));
-        
-
     }
     
 

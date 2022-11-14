@@ -6,16 +6,17 @@
 
 int main(){
 
-    double T = 2.4;
+    double T = 1.;
     // Burde ikke dette være større siden det er et latice og ikke input?
     double L = 20.; 
 
     Ising_model model = Ising_model(T, L);
 
-    //model.S = random_model(model.S, L);
+    // Decide if initial s is random or not
+    model.S = random_model(model.S, L);
 
 
-    double cycles = 1000000.;
+    double cycles = 10000.;
     arma::vec avg_exp_val_e = arma::vec(cycles).fill(0);
     arma::vec avg_exp_val_m = arma::vec(cycles).fill(0);
     double Esum = 0;
@@ -24,21 +25,18 @@ int main(){
     for (int n = 0; n < cycles; n++){
     
         model.update();
-        Esum += model.E_col;
-        Msum += abs(model.B_col);
+        Esum += model.exp_epsilon;
+        Msum += abs(model.exp_m);
 
-        double avg_e = Esum / (n * model.N);
-        double avg_m= Esum / (n * model.N);
+        double avg_e = Esum / (n);
+        double avg_m= Msum / (n);
         avg_exp_val_e(n) = avg_e;
         avg_exp_val_m(n) = avg_m;
 
-    //avgEps_sqrd = sumEE / (nCycles * N * N);
-    //avgM = sumM / (nCycles * N);
-    //avgM_sqrd = sumMM / (nCycles * N * N);
   }
  
     // Write the vectors to files
-    std::string filename = "Exp_e_m_2.4.txt";
+    std::string filename = "Exp_e_m_random_1_TEST.txt";
     std::ofstream ofile;
     ofile.open(filename);
     int width = 12;
@@ -51,22 +49,6 @@ int main(){
             << std::endl; 
     }  
     ofile.close();  
-    /* 
-    std::cout << "\n\n exp_val_E:";
-    std::cout << model.exp_val_E;
-    std::cout << "\n\n exp_val_e:";
-    std::cout << model.exp_val_e;
-    std::cout << "\n\n exp_val_m:";
-    std::cout << model.exp_val_m;
-    std::cout << "\n\n tot_energy:";
-    std::cout << model.tot_energy(model.S)/model.N;
-    std::cout << "\n\n tot_magnetization:";
-    std::cout << model.tot_magnetization(model.S)/model.N;
-    std::cout << "\n\n spes_heat:";
-    std::cout << model.spes_heat;
-    std::cout << "\n\n suscept:";
-    std::cout << model.suscept;
-    std::cout << "####";    */
 
 
 }
