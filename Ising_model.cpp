@@ -18,8 +18,6 @@ Ising_model::Ising_model(double T_in, int L_in){
     N = L*L;
     S = arma::mat(L, L).fill(1);
     boltzmann_factor = make_boltzmann_factors();
-    E_col = 0;
-    B_col = 0;
     E_tot = tot_energy(S);
     
 }
@@ -32,6 +30,10 @@ Ising_model::Ising_model(double T_in, int L_in){
                 E_tot += S(i,j)*(S(i,(j+1)%L));
             }
          }
+        // std::cout << S;
+        // std::cout << "\n\n E tot:";
+        // std::cout << -E_tot;
+        // std::cout << "\n\n";
         
         return -E_tot;
     }
@@ -120,7 +122,9 @@ Ising_model::Ising_model(double T_in, int L_in){
     }
 
     void Ising_model::update(){
-
+            E_col = 0;
+            B_col = 0;
+            //double E = 0;
             for(int j = 0; j < N; j++){
                 MCMC();
                 //E_col += E_tot;
@@ -129,12 +133,18 @@ Ising_model::Ising_model(double T_in, int L_in){
                 B_col += tot_magnetization(S);
                 }  
 
+            //E = tot_energy(S);
+
+            //E = E/N;
+            E_col = E_col/N;
+            B_col = B_col/N;
             // Update expectation values
-            E = E_col/N;
-            e = E_col/(N*N);
-            m = abs(B_col)/(N);
+            //E = E_col;
+            //e = E_col/(N);
+            //m = abs(B_col)/(N);
             //spes_heat = 1./N*1./pow(T,2)*(((E_col*E_col)/N)-(exp_val_E*exp_val_E));
             //suscept = 1./N*1./T*((abs(B_col*B_col)/(N*N))-(exp_val_m*exp_val_m));
+        
 
     }
     

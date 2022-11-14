@@ -8,37 +8,34 @@ int main(){
 
     double T = 2.4;
     // Burde ikke dette være større siden det er et latice og ikke input?
-    double L = 20.; // correct (???)
+    double L = 20.; 
 
     Ising_model model = Ising_model(T, L);
-    //std::cout << model.possible_E(); 
 
-    // model.S = random_model(model.S, L);
+    //model.S = random_model(model.S, L);
+
+
+    double cycles = 1000000.;
+    arma::vec avg_exp_val_e = arma::vec(cycles).fill(0);
+    arma::vec avg_exp_val_m = arma::vec(cycles).fill(0);
+    double Esum = 0;
+    double Msum = 0;
+
+    for (int n = 0; n < cycles; n++){
     
-
-   /*  arma::mat S_new = model.S;
-    //S_new(1,1) = -1;
-    S_new.col(0) = S_new.col(L);
-    S_new.col(L+1) = S_new.col(1);
-    S_new.row(0) = S_new.row(L);
-    S_new.row(L+1) = S_new.row(1); */
-
-    //std::cout << S_new;
-
-    //std::cout << model.tot_energy(S_new); 
- 
-
-    //arma::vec p = model.Possible_p();
-    //model.MCMC();
-    double cycles = 10000.;
-    arma::vec exp_val_e = arma::vec(cycles).fill(0);
-    arma::vec exp_val_m = arma::vec(cycles).fill(0);
-
-    for(int i = 0; i < cycles; i++){
         model.update();
-        exp_val_e(i) = model.e;
-        exp_val_m(i) = model.m;
-    }
+        Esum += model.E_col;
+        Msum += abs(model.B_col);
+
+        double avg_e = Esum / (n * model.N);
+        double avg_m= Esum / (n * model.N);
+        avg_exp_val_e(n) = avg_e;
+        avg_exp_val_m(n) = avg_m;
+
+    //avgEps_sqrd = sumEE / (nCycles * N * N);
+    //avgM = sumM / (nCycles * N);
+    //avgM_sqrd = sumMM / (nCycles * N * N);
+  }
  
     // Write the vectors to files
     std::string filename = "Exp_e_m_2.4.txt";
@@ -48,9 +45,9 @@ int main(){
     int prec  = 4;
 
     // Loop over steps
-    for (int i = 0; i < exp_val_m.size(); i++){
-    ofile << std::setw(width) << std::setprecision(prec) << std::scientific << exp_val_e[i]
-            << std::setw(width) << std::setprecision(prec) << std::scientific << exp_val_m[i]
+    for (int i = 0; i < avg_exp_val_e.size(); i++){
+    ofile << std::setw(width) << std::setprecision(prec) << std::scientific << avg_exp_val_e[i]
+            << std::setw(width) << std::setprecision(prec) << std::scientific << avg_exp_val_m[i]
             << std::endl; 
     }  
     ofile.close();  
