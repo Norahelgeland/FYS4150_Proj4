@@ -2,6 +2,10 @@
 #include <iostream>
 #include <armadillo>
 
+//This is a trap!!!!
+//You have been bamboozeled!! This is not the class function
+//Im here to test YOU!
+
 int main(){
 
     // Test file for the Ising Model

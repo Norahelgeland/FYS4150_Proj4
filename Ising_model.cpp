@@ -6,7 +6,7 @@
 #include <math.h>
 
 std::mt19937 generator (123);
-std::uniform_int_distribution<int> disINT(0.0, 19.);
+std::uniform_int_distribution<int> disINT(0.0, 39.);
 std::uniform_real_distribution<double> disDOUBLE(0.0, 1.0);
 
 
@@ -147,8 +147,8 @@ Ising_model::Ising_model(double T_in, int L_in){
             //E = E_col;
             //e = E_col/(N);
             //m = abs(B_col)/(N);
-            //spes_heat = 1./N*1./pow(T,2)*(((E_col*E_col)/N)-(exp_val_E*exp_val_E));
-            //suscept = 1./N*1./T*((abs(B_col*B_col)/(N*N))-(exp_val_m*exp_val_m));
+            spes_heat = 1./N*1./pow(T,2)*(((E*E)/N)-(pow((E/N),2)));
+            suscept = 1./N*1./T*((abs(M*M)/(N*N))-(pow(abs(M)/N, 2)));
     }
     
 

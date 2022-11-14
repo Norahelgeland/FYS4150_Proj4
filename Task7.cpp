@@ -16,6 +16,8 @@ int main(int argc, const char* argv[]){
     const int n_T = atoi(argv[3]);
     const int cycles = atoi(argv[4]);
     const std::string output_file_name = argv[5];
+
+    arma::mat results = arma::mat(n_T, 5, arma::fill::zeros);
     
     const double delta_T = (T_max - T_min) / (n_T - 1);  // n_A points correspond to (n_A - 1) intervals
 
@@ -26,13 +28,13 @@ int main(int argc, const char* argv[]){
     // Burde ikke dette være større siden det er et latice og ikke input? 
 
     // Prepare for file output
-    static int print_prec = 10;
+    //tatic int print_prec = 10;
     // Each thread will get its own output file name
-    const int my_thread = omp_get_thread_num();
-    std::ofstream ofile;
-    std::string my_output_file_name = output_file_name + "_thread_" + std::to_string(my_thread) + ".txt";
+    //const int my_thread = omp_get_thread_num();
+    //std::ofstream ofile;
+    //std::string my_output_file_name = output_file_name + "_thread_" + std::to_string(my_thread) + ".txt";
     //ofile.open(my_output_file_name.c_str(), std::ofstream::trunc);  // ofstream::trunc makes sure old content is deleted
-    ofile.open(my_output_file_name);
+    //ofile.open(my_output_file_name);
 
 
     // Here we start the parallelized loop over A
@@ -41,7 +43,7 @@ int main(int argc, const char* argv[]){
     {
 
         double T = T_min + i * delta_T;
-        double L = 20.;
+        double L = 40.;
 
         Ising_model model = Ising_model(T, L);
 
@@ -49,25 +51,37 @@ int main(int argc, const char* argv[]){
         // model.S = random_model(model.S, L);
 
 
-       // double cycles = 1000.;
-        arma::vec avg_val_e = arma::vec(cycles).fill(0);
-        arma::vec avg_val_m = arma::vec(cycles).fill(0);
-        double Esum = 0;
-        double Msum = 0;
 
-        for (int n = 0; n < cycles; n++){
-        
-            model.update();
-            Esum += model.epsilon;
-            Msum += abs(model.m);
+     //double cycles = 10000.;
+    //arma::vec avg_exp_val_e = arma::vec(cycles).fill(0);
+    //arma::vec avg_exp_val_m = arma::vec(cycles).fill(0);
+    double Esum = 0;
+    double Msum = 0;
 
-            double avg_e = Esum / (n);
-            double avg_m= Msum / (n);
-
-            avg_val_e(n) = avg_e;
-            avg_val_m(n) = avg_m;
-            }
+    for (int n = 0; n < cycles; n++){
     
+        model.update();
+        Esum += model.exp_epsilon;
+        Msum += abs(model.exp_m);
+
+        //double avg_e = Esum / (n);
+        //double avg_m= Msum / (n);
+        //avg_exp_val_e(n) = avg_e;
+        //avg_exp_val_m(n) = avg_m;
+
+    }
+    double avg_e = Esum / cycles;
+    double avg_m= Msum / cycles;
+    double C_v = model.spes_heat;
+    double X = model.suscept;
+
+    results(i, 0) = T;
+    results(i, 1) = avg_e;
+    results(i, 2) = avg_m;
+    results(i, 3) = C_v;
+    results(i, 4) = X;
+    
+
         // Write the vectors to files
         //std::string filename = "e_m_1.txt";
         //std::ofstream ofile;
@@ -79,16 +93,23 @@ int main(int argc, const char* argv[]){
 
         // Write results for this A value
 
-        for (int i = 0; i < avg_val_e.size(); i++){
-        ofile << std::setw(width) << std::setprecision(prec) << std::scientific << avg_val_e[i]
-                << std::setw(width) << std::setprecision(prec) << std::scientific << avg_val_m[i]
-                << std::endl; 
-        }  
-        ofile.close();  
+    
 
      } // End parallelized loop over A
 
   } // End entire parallel region
 
+/*         ofile << std::setw(width) << std::setprecision(prec) << std::scientific << T
+                << std::setw(width) << std::setprecision(prec) << std::scientific << avg_e
+                << std::setw(width) << std::setprecision(prec) << std::scientific << avg_m
+                << std::setw(width) << std::setprecision(prec) << std::scientific << C_v
+                << std::setw(width) << std::setprecision(prec) << std::scientific << avg_m
+                << std::endl; 
+        
+        ofile.close();   */
 
+    std::string my_output_file_name = output_file_name + ".csv";
+    results.save(my_output_file_name, arma::csv_ascii);
+
+    return 0;
 }
