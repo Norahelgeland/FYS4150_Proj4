@@ -14,8 +14,8 @@ int main(int argc, const char* argv[]){
     const double T_min = atof(argv[1]);
     const double T_max = atof(argv[2]);
     const int n_T = atoi(argv[3]);
-    const int n_cycles_per_thread = atoi(argv[4]);
-    const string output_file_name = argv[5];
+    const int cycles = atoi(argv[4]);
+    const std::string output_file_name = argv[5];
     
     const double delta_T = (T_max - T_min) / (n_T - 1);  // n_A points correspond to (n_A - 1) intervals
 
@@ -29,10 +29,10 @@ int main(int argc, const char* argv[]){
     static int print_prec = 10;
     // Each thread will get its own output file name
     const int my_thread = omp_get_thread_num();
-    ofstream ofile;
-    string my_output_file_name = output_file_name + ".thread_" + to_string(my_thread);
-    ofile.open(my_output_file_name.c_str(), ofstream::trunc);  // ofstream::trunc makes sure old content is deleted
-
+    std::ofstream ofile;
+    std::string my_output_file_name = output_file_name + "_thread_" + std::to_string(my_thread) + ".txt";
+    //ofile.open(my_output_file_name.c_str(), std::ofstream::trunc);  // ofstream::trunc makes sure old content is deleted
+    ofile.open(my_output_file_name);
 
 
     // Here we start the parallelized loop over A
@@ -49,7 +49,7 @@ int main(int argc, const char* argv[]){
         // model.S = random_model(model.S, L);
 
 
-        double cycles = 100000.;
+       // double cycles = 1000.;
         arma::vec avg_val_e = arma::vec(cycles).fill(0);
         arma::vec avg_val_m = arma::vec(cycles).fill(0);
         double Esum = 0;
@@ -70,8 +70,8 @@ int main(int argc, const char* argv[]){
     
         // Write the vectors to files
         //std::string filename = "e_m_1.txt";
-        std::ofstream ofile;
-        ofile.open(output_file_name);
+        //std::ofstream ofile;
+        //ofile.open(output_file_name);
         int width = 12;
         int prec  = 4;
 
