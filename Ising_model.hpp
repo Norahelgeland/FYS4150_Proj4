@@ -12,8 +12,9 @@ class Ising_model{
         int L;
         double N;
         arma::mat S;
-        //double Z;
         double E;
+        double E_exp;
+        double EE_exp;
         double epsilon;
         double exp_epsilon;
         double M;
@@ -22,9 +23,7 @@ class Ising_model{
         double spes_heat;
         double suscept;
         std::map <double, double> boltzmann_factor;
-        //double E_col;
-        //double B_col;
-        double E_tot;
+        //double E_tot;
 
 
         Ising_model(){};
@@ -32,7 +31,7 @@ class Ising_model{
         Ising_model(double T, int L);
 
         
-        double tot_energy(arma::mat S);
+        double tot_energy();
         
         std::map <double, double>  make_boltzmann_factors();
 
@@ -40,7 +39,7 @@ class Ising_model{
 
         //double Z_fun();
 
-        double tot_magnetization(arma::mat S);
+        double tot_magnetization();
 
         //arma::vec possible_M();
 

@@ -1,4 +1,5 @@
 #include "omp.h"  // OpenMP header
+//#include "/usr/local/opt/libomp/include/omp.h"
 #include "Ising_model.cpp"
 #include <iostream>
 #include <armadillo>
