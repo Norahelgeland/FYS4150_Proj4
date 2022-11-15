@@ -23,7 +23,7 @@ class Ising_model{
         double spes_heat;
         double suscept;
         std::map <double, double> boltzmann_factor;
-        //double E_tot;
+        double E_tot;
 
 
         Ising_model(){};

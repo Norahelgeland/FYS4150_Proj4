@@ -18,21 +18,20 @@ Ising_model::Ising_model(double T_in, int L_in){
     N = L*L;
     S = arma::mat(L, L).fill(1);
     boltzmann_factor = make_boltzmann_factors();
-
-    //E_tot = tot_energy(S);
+    //E_tot = tot_energy();
     
 }
     double Ising_model::tot_energy(){
-        double E_tot = 0;
+        double E_sys = 0;
 
         for(int i = 0; i < L; i++){
             for(int j = 0; j < L; j++){
-                E_tot += S(i,j)*(S((i+1)%L,j));
-                E_tot += S(i,j)*(S(i,(j+1)%L));
+                E_sys += S(i,j)*(S((i+1)%L,j));
+                E_sys += S(i,j)*(S(i,(j+1)%L));
             }
          }
         
-        return -E_tot;
+        return -E_sys;
     }
 
     std::map <double, double> Ising_model::make_boltzmann_factors(){
@@ -57,32 +56,6 @@ Ising_model::Ising_model(double T_in, int L_in){
     }
 
 
-/*     arma::vec Ising_model::possible_M(){
-
-        arma::mat A = arma::mat(L, L).fill(1);
-
-        arma::vec M_poss = arma::vec(N+1).fill(0);
-
-        M_poss(0) = tot_magnetization(A);
-        
-        int counter = 1;
-        for(int i = 0; i < L; i++){
-            for(int j = 0; j < L; j++){
-                A(i,j) = -1;
-                M_poss(counter) = tot_magnetization(A);
-                counter += 1;
-            }
-        } 
-
-        return M_poss;
-    } */
-
-/* 
-    double Ising_model::boltzmann_dist(arma::mat S){
-        double distr = (1./Z)*exp(-(1/T)*tot_energy(S)); 
-        return distr;
-    } */
-
     void Ising_model::MCMC(){
 
         int num_i = disINT(generator);
@@ -104,20 +77,20 @@ Ising_model::Ising_model(double T_in, int L_in){
         // Check if it accept the change, and flips the spinn
         if(delta_E < 0 || r <= boltzmann_factor[delta_E]){
             S(num_i, num_j) = S(num_i, num_j)*(-1);
-            //E_tot += delta_E;
+            E_tot += delta_E;
         }
 
     }
 
     void Ising_model::update(){
 
-            E = tot_energy();
+            E_tot = tot_energy(); 
+            E = E_tot;
             M = tot_magnetization();
-            //exp_m = 0;
+
             for(int j = 0; j < N; j++){
                 MCMC();
-
-                E += tot_energy();
+                E += E_tot; 
                 M += tot_magnetization();
                 }  
 
