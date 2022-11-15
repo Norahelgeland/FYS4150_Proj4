@@ -44,7 +44,7 @@ int main(int argc, const char* argv[]){
     {
 
         double T = T_min + i * delta_T;
-        double L = 40.;
+        double L = 80.;
 
         Ising_model model = Ising_model(T, L);
 
@@ -69,6 +69,11 @@ int main(int argc, const char* argv[]){
         //double avg_m= Msum / (n);
         //avg_exp_val_e(n) = avg_e;
         //avg_exp_val_m(n) = avg_m;
+
+        std::cout << "\n\n I'm thread";
+        std::cout << i;
+        std::cout << ", and I'm working on cycle:";
+        std::cout << n;
 
     }
     double avg_e = Esum / cycles;

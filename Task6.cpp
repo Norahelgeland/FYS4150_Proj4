@@ -33,11 +33,11 @@ int main(){
 
         //e_TEST = join_cols(E_func, e_TEST);
 
-        double avg_e = Esum / (n);
-        double avg_m= Msum / (n);
+        //double avg_e = Esum / (n);
+       // double avg_m= Msum / (n);
 
-        avg_val_e(n) = avg_e;
-        avg_val_m(n) = avg_m;
+        avg_val_e(n) = model.epsilon;//vg_e;
+        avg_val_m(n) = abs(model.m);//avg_m;
 
   }
  
