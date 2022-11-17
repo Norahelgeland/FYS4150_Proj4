@@ -8,17 +8,17 @@ int main(){
 
     double T = 1.;
     // Burde ikke dette være større siden det er et latice og ikke input?
-    double L = 2.; 
+    double L = 20.; 
 
     Ising_model model = Ising_model(T, L);
 
     // Decide if initial s is random or not
-   // model.S = random_model(model.S, L);
+    model.S = random_model(model.S, L);
     model.E_tot = model.tot_energy();
     model.M_tot = model.tot_magnetization();
 
 
-    double cycles = 5.;
+    double cycles = 10000.;
     arma::vec avg_exp_val_e = arma::vec(cycles).fill(0);
     arma::vec avg_exp_val_m = arma::vec(cycles).fill(0);
     double Esum = 0;

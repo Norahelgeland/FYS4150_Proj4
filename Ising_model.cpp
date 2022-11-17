@@ -6,7 +6,7 @@
 #include <math.h>
 
 std::mt19937 generator (123);
-std::uniform_int_distribution<int> disINT(0.0, 1.);
+std::uniform_int_distribution<int> disINT(0.0, 19.);
 std::uniform_real_distribution<double> disDOUBLE(0.0, 1.0);
 
 
@@ -71,7 +71,7 @@ Ising_model::Ising_model(double T_in, int L_in){
         //S(num_i, num_j) = S(num_i, num_j)*(-1);
 
         //double delta_E = new_sum-old_sum;
-        
+
         double delta_E = 2.*S(num_i, num_j)*(S((num_i-1+L)%L, num_j) + S(num_i, (num_j-1+L)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
         std::cout << "\n\n delta_E:";
         std::cout << delta_E;
