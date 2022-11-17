@@ -44,7 +44,7 @@ int main(int argc, const char* argv[]){
     {
 
         double T = T_min + i * delta_T;
-        double L = 80.;
+        double L = 100.;
 
         Ising_model model = Ising_model(T, L);
 
@@ -56,14 +56,22 @@ int main(int argc, const char* argv[]){
      //double cycles = 10000.;
     //arma::vec avg_exp_val_e = arma::vec(cycles).fill(0);
     //arma::vec avg_exp_val_m = arma::vec(cycles).fill(0);
-    double Esum = 0;
-    double Msum = 0;
+    double e_sum = 0;
+    double m_sum = 0;
+    double EE_sum = 0;
+    double E_sum = 0;
+    double M_sum = 0;
+    double MM_sum = 0;
 
     for (int n = 0; n < cycles; n++){
     
         model.update();
-        Esum += model.exp_epsilon;
-        Msum += abs(model.exp_m);
+        e_sum += model.exp_epsilon;
+        m_sum += abs(model.exp_m);
+        EE_sum += pow(model.E_exp, 2);
+        E_sum += model.E_exp;
+        M_sum += model.M_exp;
+        MM_sum += pow(model.M_exp, 2);
 
         //double avg_e = Esum / (n);
         //double avg_m= Msum / (n);
@@ -76,10 +84,12 @@ int main(int argc, const char* argv[]){
         std::cout << n;
 
     }
-    double avg_e = Esum / cycles;
-    double avg_m= Msum / cycles;
-    double C_v = model.spes_heat;
-    double X = model.suscept;
+    double avg_e = e_sum / cycles;
+    double avg_m= m_sum / cycles;
+    //double C_v = model.spes_heat;
+    //double X = model.suscept;
+    double C_v = 1./cycles*1./pow(T,2)*(((EE_sum)/cycles)-(pow((E_sum/cycles),2)));
+    double X = 1./cycles*1./T*(((abs(MM_sum)/(cycles)))-(pow(abs(M_sum)/cycles, 2)));
 
     results(i, 0) = T;
     results(i, 1) = avg_e;

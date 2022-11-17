@@ -14,11 +14,13 @@ class Ising_model{
         arma::mat S;
         double E;
         double E_exp;
+        double M_exp;
         double EE_exp;
         double epsilon;
         double exp_epsilon;
         double M;
         double m;
+        double M_tot;
         double exp_m;
         double spes_heat;
         double suscept;
