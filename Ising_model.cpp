@@ -37,11 +37,11 @@ Ising_model::Ising_model(double T_in, int L_in){
 
     std::map <double, double> Ising_model::make_boltzmann_factors(){
         std::map <double, double> boltzmann_factor;
-        boltzmann_factor[-8.] = exp((-1/T)*-8.);
-        boltzmann_factor[-4.] = exp((-1/T)*-4.);
-        boltzmann_factor[0.] = exp((-1/T)*0.);
-        boltzmann_factor[4.] = exp((-1/T)*4.);
-        boltzmann_factor[8.] = exp((-1/T)*8.);
+        boltzmann_factor[-8.] = exp((-1./T)*-8.);
+        boltzmann_factor[-4.] = exp((-1./T)*-4.);
+        boltzmann_factor[0.] = exp((-1./T)*0.);
+        boltzmann_factor[4.] = exp((-1./T)*4.);
+        boltzmann_factor[8.] = exp((-1./T)*8.);
         return boltzmann_factor;
     }
 
@@ -63,15 +63,16 @@ Ising_model::Ising_model(double T_in, int L_in){
         int num_j = disINT(generator);
 
         // Pick random spinn position and turn the spinn
-       // int old_sum =  S(num_i, num_j)*(S((num_i-1+L)%L, num_j) + S(num_i, (num_j-1+L)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
+        //int old_sum =  -S(num_i, num_j)*(S((num_i-1+L)%L, num_j) + S(num_i, (num_j-1+L)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
         
-       // S(num_i, num_j) = S(num_i, num_j)*(-1);
-        //int new_sum =  S(num_i, num_j)*(S((num_i-1+L)%L, num_j) + S(num_i, (num_j-1+L)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
+        //S(num_i, num_j) = S(num_i, num_j)*(-1);
+        //int new_sum =  -S(num_i, num_j)*(S((num_i-1+L)%L, num_j) + S(num_i, (num_j-1+L)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
         
         //S(num_i, num_j) = S(num_i, num_j)*(-1);
 
         //double delta_E = new_sum-old_sum;
-        double delta_E = -2.*S(num_i, num_j)*(S((num_i-1+L)%L, num_j) + S(num_i, (num_j-1+L)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
+        
+        double delta_E = 2.*S(num_i, num_j)*(S((num_i-1+L)%L, num_j) + S(num_i, (num_j-1+L)%L) + S((num_i+1)%L, num_j) + S(num_i, (num_j+1)%L));
         std::cout << "\n\n delta_E:";
         std::cout << delta_E;
 
