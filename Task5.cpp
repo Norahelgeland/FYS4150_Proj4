@@ -6,10 +6,11 @@
 
 int main(){
 
+    // Define temperature and lattice size
     double T = 1.;
-    // Burde ikke dette være større siden det er et latice og ikke input?
     double L = 20.; 
 
+    // Creating an instance of the class
     Ising_model model = Ising_model(T, L);
 
     // Decide if initial s is random or not
@@ -18,22 +19,27 @@ int main(){
     model.M_tot = model.tot_magnetization();
 
 
-    double cycles = 10000.;
+    double cycles = 10000.; // number of cycles
+
+    // Create vectors to store the expectation values
     arma::vec avg_exp_val_e = arma::vec(cycles).fill(0);
     arma::vec avg_exp_val_m = arma::vec(cycles).fill(0);
+
+    // Create doubles to store the sum
     double Esum = 0;
     double Msum = 0;
 
+    // Run the model 
     for (int n = 0; n < cycles; n++){
     
         model.update();
         Esum += model.epsilon;
         Msum += abs(model.m);
 
-        double avg_e = Esum / (n);
-        double avg_m= Msum / (n);
-        avg_exp_val_e(n) = avg_e;
-        avg_exp_val_m(n) = avg_m;
+        double avg_e = Esum / (n); // Calculate the average energy per spin
+        double avg_m= Msum / (n); // Calculate the average magnitization per spin
+        avg_exp_val_e(n) = avg_e; // Add to vector
+        avg_exp_val_m(n) = avg_m; // Add to vector
 
   }
  

@@ -8,51 +8,35 @@ class Ising_model{
     private:
 
     public:
-        double T;
-        int L;
-        double N;
-        arma::mat S;
-        double E;
-        double E_exp;
-        double M_exp;
-        double EE_exp;
-        double epsilon;
-        double exp_epsilon;
-        double M;
-        double m;
-        double M_tot;
-        double exp_m;
-        double spes_heat;
-        double suscept;
-        std::map <double, double> boltzmann_factor;
-        double E_tot;
+        double T; // Temperature
+        int L; // Lattice length
+        double N; // Lattice size
+        arma::mat S; // Stores the spins
+        double E_tot; // total energy in the system
+        double epsilon; // Energy per spin
+        double m; // Magnitization per spin
+        double M_tot; // Total magnitization in the system
+        std::map <double, double> boltzmann_factor; // Stores boltzmann factors
 
 
         Ising_model(){};
+        
         // Constructor
         Ising_model(double T, int L);
 
-        
+        // Function that calculates the total energy of the system
         double tot_energy();
         
+        // Function that calculates the possible Boltzmann factors for the system
         std::map <double, double>  make_boltzmann_factors();
 
-        //arma::vec possible_E();
-
-        //double Z_fun();
-
+        // Function that calculates the total magnitization of the system
         double tot_magnetization();
 
-        //arma::vec possible_M();
-
-        //double boltzmann_dist(arma::mat S);
-
-        //arma::vec Possible_p();
-        
-        // double Exp_value(arma::vec input);    
-
+        // Function that does one iteration trough an MCMC cycle
         void MCMC();
 
+        // Function that does one MCMC cycle
         void update();
 
 };

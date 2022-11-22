@@ -2,30 +2,29 @@
 #include <iostream>
 #include <armadillo>
 
-//This is a trap!!!!
-//You have been bamboozeled!! This is not the class function
-//Im here to test YOU!
-
 int main(){
 
     // Test file for the Ising Model
     double T = 1.;
     double L = 2.;
 
+    // Making an instance of the class
     Ising_model model = Ising_model(T, L);
 
-
+    // test E
     double E = model.tot_energy();
     assert(E == -8);
-
+    
+    // Test M
     double M = model.tot_magnetization();
     assert(M == 4);
 
-  
+    // Runn the MCMC simulation
     for(int i = 1; i <=3; i++){
         model.update();
     }
 
+    // Printing the values to check if they look correct
     std::cout << "\n\n the spin matrix:";
     std::cout << "\n\n"; 
     std::cout << model.S;

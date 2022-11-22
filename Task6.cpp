@@ -6,21 +6,24 @@
 
 int main(){
 
+    // Define temperature and lattice size
     double T = 2.4;
-    // Burde ikke dette være større siden det er et latice og ikke input?
     double L = 20.; 
 
+    // Creating an instance of the class
     Ising_model model = Ising_model(T, L);
 
     // Decide if initial s is random or not
     // model.S = random_model(model.S, L);
 
 
-    double cycles = 100000.;
+    double cycles = 100000.; // Number of cycles
 
-    //arma::vec e_TEST =  arma::vec(1).fill(0);
+    // Create vectors to store the expectation values
     arma::vec avg_val_e = arma::vec(cycles).fill(0);
     arma::vec avg_val_m = arma::vec(cycles).fill(0);
+
+    // Create doubles to store the sum
     double Esum = 0;
     double Msum = 0;
 
@@ -28,16 +31,9 @@ int main(){
         
     
         model.update();
-        //Esum += model.epsilon;
-        //Msum += abs(model.m);
 
-        //e_TEST = join_cols(E_func, e_TEST);
-
-        //double avg_e = Esum / (n);
-       // double avg_m= Msum / (n);
-
-        avg_val_e(n) = model.epsilon; //vg_e;
-        avg_val_m(n) = abs(model.m); //avg_m;
+        avg_val_e(n) = model.epsilon; // add the energy per spin afther one MCMC cycle
+        avg_val_m(n) = abs(model.m); // add the magnitization per spin afther one MCMC cycle
 
   }
  
