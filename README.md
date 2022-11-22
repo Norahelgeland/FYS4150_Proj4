@@ -4,7 +4,7 @@
 
 - In the source file Ising_model.cpp we have our Ising Model class. In this file we have also included the header file Ising_model.hpp containg the class declaration.
   
-- In the sourcefile Task5.cpp we use the Ising Model class from Ising_model.cpp. Here we run the class function that run the monte Carlo method N times for 1000000 cycles. This we do for the 20 x 20 Lattice. Returns expectation values for the energy.
+- In the sourcefile Task5.cpp we use the Ising Model class from Ising_model.cpp. It also contains the header file random_model.hpp. Here we run the class function that run the monte Carlo method N times for 1000000 cycles. This we do for the 20 x 20 Lattice. Returns expectation values for the energy.
   
 - In the source file Task6.cpp we use the Ising Model class from Ising_model.cpp. Here we do the same as in Task5.cpp but it returns energy per spin for the two temperatures instead of expectation values.
   
